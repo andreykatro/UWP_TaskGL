@@ -27,6 +27,7 @@ namespace UWP_TaskGL
             {
                 byte[] byteFile = await ZipLib.Serialize.ConvertFileToByteAsync(await file.OpenStreamForReadAsync());
                 listMemoryFile.Add(new ModelMemoryFile { DirStructure = dirStruct, FileName = file.Name, ByteFile = byteFile });
+                myListView.Items.Add(dirStruct + "/" + file.Name);
             }
 
             foreach (var folder in await root.GetFoldersAsync())
@@ -38,6 +39,7 @@ namespace UWP_TaskGL
             if (IsEmptyFolder.Count == 0)
             {
                 listMemoryFile.Add(new ModelMemoryFile { DirStructure = dirStruct });
+                myListView.Items.Add(dirStruct);
             }
 
             return listMemoryFile;
@@ -45,6 +47,7 @@ namespace UWP_TaskGL
 
         private async void BtSerialize_ClickAsync(object sender, RoutedEventArgs e)
         {
+            myListView.Items.Clear();
             var folderPicker = new FolderPicker
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
@@ -82,6 +85,8 @@ namespace UWP_TaskGL
 
         private async void BtDeserialize_ClickAsync(object sender, RoutedEventArgs e)
         {
+            myListView.Items.Clear();
+
             var filePicker = new FileOpenPicker
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
