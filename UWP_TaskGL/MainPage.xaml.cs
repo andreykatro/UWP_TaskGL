@@ -44,7 +44,6 @@ namespace UWP_TaskGL
 
             return listMemoryFile;
         }
-
         private async void BtSerialize_ClickAsync(object sender, RoutedEventArgs e)
         {
             myListView.Items.Clear();
@@ -55,18 +54,28 @@ namespace UWP_TaskGL
             folderPicker.FileTypeFilter.Add("*");
 
             StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-
-            if (folder != null)
+            try
             {
-                myProgressBar.IsIndeterminate = true;
+                if (folder != null)
+                {
+                    myProgressBar.IsIndeterminate = true;
 
-                await Task.Yield();
-                var list = await GetLisFilesAsync(folder, folder.Name);
+                    await Task.Yield();
+                    var list = await GetLisFilesAsync(folder, folder.Name);
 
-                StorageFile storageFile = await folder.CreateFileAsync(folder.Name + ".bin", CreationCollisionOption.GenerateUniqueName);
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                ZipLib.Serialize.SerializeToBinaryFile(stream, list);
+                    StorageFile storageFile = await folder.CreateFileAsync(folder.Name + ".bin", CreationCollisionOption.GenerateUniqueName);
+                    var stream = await storageFile.OpenStreamForWriteAsync();
+                    ZipLib.Serialize.SerializeToBinaryFile(stream, list);
 
+                }
+            }catch(Exception ex)
+            {
+                var msgDialog = new MessageDialog("Oops!");
+                await msgDialog.ShowAsync();
+                Debug.WriteLine("Main Page. 'BtSerialize_ClickAsync' " + ex.Message);
+            }
+            finally
+            {
                 myProgressBar.IsIndeterminate = false;
             }
         }

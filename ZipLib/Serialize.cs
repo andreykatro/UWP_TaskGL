@@ -29,6 +29,7 @@ namespace ZipLib
             catch (Exception ex)
             {
                 Debug.WriteLine("Message ZipLib. 'ConvertFileToByteAsync' " + ex.Message);
+                throw;
             }
             finally
             {
@@ -37,6 +38,7 @@ namespace ZipLib
 
             return bytes;
         }
+
         public static void SerializeToBinaryFile(Stream streamForWrite, object objectToSerialize)
         {
             try
